@@ -12,16 +12,17 @@ public class Main {
 
         while (userOption != 0) {
             System.out.println("Please choose an option: ");
-            System.out.println("(1) Add a task");
-            System.out.println("(2) Remove task");
-            System.out.println("(3) Update a task");
-            System.out.println("(4) List all tasks");
-            System.out.println("(5) List all tasks of a certain priority");
+            System.out.println("(1) Add a task.");
+            System.out.println("(2) Remove a task.");
+            System.out.println("(3) Update a task.");
+            System.out.println("(4) List all tasks.");
+            System.out.println("(5) List all tasks of a certain priority.");
             System.out.println("(0) Exit.");
             userOption = handleExceptionInt("Invalid Option!"); //Passes only the error message
 
             switch (userOption) {
                 case 0:
+                    System.out.println("Exiting...");
                     break;
                 case 1:
                     addTask(taskList); //List is passed into method and added to
@@ -48,39 +49,47 @@ public class Main {
     static void addTask(List<Task> taskList) {
         Scanner input = new Scanner(System.in);
 
-        System.out.println("Enter the title of the new task.");
+        System.out.println("Enter the new task's name.");
         String title = input.nextLine();
-        System.out.println("Enter the description of the new task");
+        System.out.println("Enter the new task's description.");
         String description = input.nextLine();
-        int priority = handleExceptionInt("Enter the priority (0-5) of the new task.", "Invalid input!");
+        int priority = handleExceptionInt("Enter the new task's priority (0-5)", "Invalid input!");
 
         taskList.add(new Task(title, description, priority));
     }
 
     static void removeTask(List<Task> taskList) {
-        int removeIndex = handleExceptionInt("Enter the index of the task to remove.", "Invalid input!");
-        taskList.remove(removeIndex);
+        if (!taskList.isEmpty()) {
+            int removeIndex = handleExceptionInt("Enter the index of the task to remove.", "Invalid input!");
+            taskList.remove(removeIndex);
+        } else {
+            System.out.println("The task list is empty!\n");
+        }
     }
 
     static void updateTask(List<Task> taskList) {
         Scanner input = new Scanner(System.in);
 
-        int setIndex = handleExceptionInt("Enter the index of the task to update", "Invalid input!");
-        System.out.println("Enter the updated title.");
-        String title = input.nextLine();
-        System.out.println("Enter the updated description");
-        String description = input.nextLine();
-        int priority = handleExceptionInt("Enter the updated priority", "Invalid input!");
+        if (!taskList.isEmpty()) {
+            int setIndex = handleExceptionInt("Enter the index of the task to update", "Invalid input!");
+            System.out.println("Enter the new title.");
+            String title = input.nextLine();
+            System.out.println("Enter the new description");
+            String description = input.nextLine();
+            int priority = handleExceptionInt("Enter the new priority", "Invalid input!");
 
-        Task updatedTask = new Task(title, description, priority);
-        taskList.set(setIndex, updatedTask);
+            Task updatedTask = new Task(title, description, priority);
+            taskList.set(setIndex, updatedTask);
+        } else {
+            System.out.println("The task list is empty!\n");
+        }
     }
 
     static void listTasks(List<Task> taskList) {
         if (taskList.size() > 0) {
             for (int i = 0; i < taskList.size(); i++) {
                 Task task = taskList.get(i);
-                System.out.println((i + 1) + ".\t Title: " + task.getTitle());
+                System.out.println((i) + ".\t Title: " + task.getTitle());
                 System.out.println("\t Description: " + task.getDescription());
                 System.out.println("\t Priority: " + task.getPriority() + "\n");
             }
@@ -95,12 +104,16 @@ public class Main {
 
             for (int i = 0; i < taskList.size(); i++) {
                 Task task = taskList.get(i);
+                boolean taskFound = true;
                 if (task.getPriority() == priority) {
-                    System.out.println((i + 1) + ".\t Title: " + task.getTitle());
+                    System.out.println((i) + ".\t Title: " + task.getTitle());
                     System.out.println("\t Description: " + task.getDescription());
                     System.out.println("\t Priority: " + task.getPriority() + "\n");
                 } else {
-                    System.out.println("No tasks found!\n");
+                    taskFound = false;
+                }
+                if (!taskFound) {
+                    System.out.println("No tasks found with that priority!\n");
                 }
             }
         } else {
