@@ -7,7 +7,6 @@ public class Main {
 
 
     public static void main(String[] args) {
-        Exceptions exceptions = new Exceptions(); //Instance of the Exceptions class, I use this on every integer input.
         int userOption = -1;
         List<Task> taskList = new ArrayList<>();
 
@@ -17,9 +16,9 @@ public class Main {
             System.out.println("(2) Remove task");
             System.out.println("(3) Update a task");
             System.out.println("(4) List all tasks");
-            System.out.println("(5) List tasks by priority");
+            System.out.println("(5) List all tasks of a certain priority");
             System.out.println("(0) Exit.");
-            userOption = exceptions.handleExceptionInt(); //Passes empty string because message would be repeated
+            userOption = handleExceptionInt("Invalid Option!"); //Passes only the error message
 
             switch (userOption) {
                 case 0:
@@ -47,35 +46,31 @@ public class Main {
     }
 
     static void addTask(List<Task> taskList) {
-        Exceptions exceptions = new Exceptions(); //Instance of the Exceptions class, I use this on every integer input
         Scanner input = new Scanner(System.in);
 
         System.out.println("Enter the title of the new task.");
         String title = input.nextLine();
         System.out.println("Enter the description of the new task");
         String description = input.nextLine();
-        int priority = exceptions.handleExceptionInt("Enter the priority (0-5) of the new task.");
+        int priority = handleExceptionInt("Enter the priority (0-5) of the new task.", "Invalid input!");
 
         taskList.add(new Task(title, description, priority));
     }
 
     static void removeTask(List<Task> taskList) {
-        Exceptions exceptions = new Exceptions();
-
-        int removeIndex = exceptions.handleExceptionInt("Enter the index of the task to remove.");
+        int removeIndex = handleExceptionInt("Enter the index of the task to remove.", "Invalid input!");
         taskList.remove(removeIndex);
     }
 
     static void updateTask(List<Task> taskList) {
-        Exceptions exceptions = new Exceptions();
         Scanner input = new Scanner(System.in);
 
-        int setIndex = exceptions.handleExceptionInt("Enter the index of the task to update");
+        int setIndex = handleExceptionInt("Enter the index of the task to update", "Invalid input!");
         System.out.println("Enter the updated title.");
         String title = input.nextLine();
         System.out.println("Enter the updated description");
         String description = input.nextLine();
-        int priority = exceptions.handleExceptionInt("Enter the updated priority");
+        int priority = handleExceptionInt("Enter the updated priority", "Invalid input!");
 
         Task updatedTask = new Task(title, description, priority);
         taskList.set(setIndex, updatedTask);
@@ -95,10 +90,8 @@ public class Main {
     }
 
     static void listPriorityTask(List<Task> taskList) {
-        Exceptions exceptions = new Exceptions();
-
         if (taskList.size() > 0) {
-            int priority = exceptions.handleExceptionInt("Please choose the priority of the tasks");
+            int priority = handleExceptionInt("Please choose the priority of the tasks", "Invalid Input!");
 
             for (int i = 0; i < taskList.size(); i++) {
                 Task task = taskList.get(i);
@@ -106,10 +99,41 @@ public class Main {
                     System.out.println((i + 1) + ".\t Title: " + task.getTitle());
                     System.out.println("\t Description: " + task.getDescription());
                     System.out.println("\t Priority: " + task.getPriority() + "\n");
+                } else {
+                    System.out.println("No tasks found!\n");
                 }
             }
         } else {
-            System.out.println("The task list is empty.\n");
+            System.out.println("The task list is empty!\n");
         }
+    }
+
+    static int handleExceptionInt(String message, String caughtException) {
+        int userInput;
+        while (true) {
+            Scanner input = new Scanner(System.in);
+            System.out.println(message);
+            try {
+                userInput = input.nextInt();
+                break;
+            } catch (Exception e) {
+                System.out.println(caughtException);
+            }
+        }
+        return userInput;
+    }
+
+    static int handleExceptionInt(String caughtException) { //Overloaded handleExceptionInt(), one string is passed in
+        int userInput;
+        while (true) {
+            Scanner input = new Scanner(System.in);
+            try {
+                userInput = input.nextInt();
+                break;
+            } catch (Exception e) {
+                System.out.println(caughtException); //Only the error message is being repeated each time
+            }
+        }
+        return userInput;
     }
 }
