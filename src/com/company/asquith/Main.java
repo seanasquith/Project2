@@ -101,10 +101,10 @@ public class Main {
     static void listPriorityTask(List<Task> taskList) {
         if (taskList.size() > 0) {
             int priority = handleExceptionInt("Please choose the priority of the tasks", "Invalid Input!");
-
+            boolean taskFound = true;
             for (int i = 0; i < taskList.size(); i++) {
                 Task task = taskList.get(i);
-                boolean taskFound = true;
+
                 if (task.getPriority() == priority) {
                     System.out.println((i) + ".\t Title: " + task.getTitle());
                     System.out.println("\t Description: " + task.getDescription());
@@ -112,9 +112,9 @@ public class Main {
                 } else {
                     taskFound = false;
                 }
-                if (!taskFound) {
-                    System.out.println("No tasks found with that priority!\n");
-                }
+            }
+            if (taskFound) {
+                System.out.println("No tasks found with that priority!\n");
             }
         } else {
             System.out.println("The task list is empty!\n");
